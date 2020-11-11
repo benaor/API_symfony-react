@@ -18,14 +18,6 @@ class AppFixtures extends Fixture
         $chrono = 1;
 
         for ($u = 0; $u < 10; $u++) {
-
-            $benjamin = new User();
-            $benjamin->setFirstName("Benjamin")
-                ->setLastName("Girard")
-                ->setEmail("benjamin@girard.com")
-                ->setPassword("password");
-            $manager->persist($benjamin);
-
             $user = new User();
             $user->setFirstName($faker->firstName())
                 ->setLastName($faker->lastName)
