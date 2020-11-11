@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Customer;
 use App\Entity\Invoice;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -15,6 +16,24 @@ class AppFixtures extends Fixture
 
         $faker  = Factory::create('fr_FR');
         $chrono = 1;
+
+        $benjamin = new User();
+        $benjamin->setFirstName("Benjamin")
+                 ->setLastName("Girard")
+                 ->setEmail("benjamin@girard.com")
+                 ->setPassword("password");
+
+        $manager->persist($benjamin);
+
+        for ($u=0; $u < 10; $u++) { 
+            $user = new User();
+            $user->setFirstName($faker->firstName())
+                 ->setLastName($faker->lastName)
+                 ->setEmail($faker->email)
+                 ->setPassword("password");
+
+            $manager->persist($user);
+        }
 
         for($c=0 ; $c<30 ; $c++){
 
