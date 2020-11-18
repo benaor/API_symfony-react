@@ -58,7 +58,7 @@ class Customer
 
     /**
      * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="customer")
-     * @Groups({"customers_read", "invoices_read"})
+     * @Groups({"customers_read"})
      */
     private $invoices;
 
@@ -67,6 +67,29 @@ class Customer
      * @Groups({"customers_read", "invoices_read"})
      */
     private $user;
+
+    /**
+     * Permet de recuperer le total des invoices
+     * @Groups({"customers_read"})
+     * @return float
+     */
+    public function getTotalAmount(): float{
+        return array_reduce($this->invoices->toArray(), function($total, $invoice){
+            return $total + $invoice->getAmout();
+        }, 0);
+    }
+
+    /**
+     * Permet de recuperer le montant total non payé
+     * @Groups({"customers_read"})
+     * @return float
+     */
+    public function getUnpaidAmount(): float {
+        return array_reduce($this->invoices->toArray(), function ($total, $invoice){
+            return $total + ($invoice->getStatus() === "PAID" || $invoice->getStatus() === "CANCELLED" ? 0 : $invoice->getAmout());
+        }, 0);
+    }
+
 
     public function __construct()
     {

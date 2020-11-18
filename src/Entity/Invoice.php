@@ -26,26 +26,26 @@ class Invoice
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @Groups({"invoices_read"})
+     * @Groups({"invoices_read", "customers_read"})
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"invoices_read"})
+     * @Groups({"invoices_read", "customers_read"})
      */
     private $amout;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"invoices_read"})
+     * @Groups({"invoices_read", "customers_read"})
      */
     private $sentAt;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"invoices_read"})
+     * @Groups({"invoices_read", "customers_read"})
      */
     private $status;
 
@@ -58,9 +58,18 @@ class Invoice
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"invoices_read"})
+     * @Groups({"invoices_read", "customers_read"})
      */
     private $chrono;
+
+    /**
+     * Permet de recuperer le user a qui appartient la facture
+     * @Groups({"invoices_read"})
+     * @return User
+     */
+    public function getUser() : User {
+        return $this->customer->getUser();
+    }
 
     public function getId(): ?int
     {
