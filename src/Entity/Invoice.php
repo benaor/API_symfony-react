@@ -13,6 +13,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 /**
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
  * @ApiResource(
+ *      subresourceOperations={
+ *          "api_customers_invoices_get_subresource"={
+ *              "normalization_context"={"groups"={"invoices_subresource"}}
+ *          }
+ *      },
  *      attributes={
  *          "pagination_enabled"=true,
  *          "pagination_enabled_item_per_page"=20,
@@ -27,14 +32,14 @@ class Invoice
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @Groups({"invoices_read", "customers_read"})
+     * @Groups({"invoices_read", "customers_read", "invoices_subresource"})
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"invoices_read", "customers_read"})
+     * @Groups({"invoices_read", "customers_read", "invoices_subresource"})
      */
     private $amout;
 
@@ -59,13 +64,13 @@ class Invoice
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"invoices_read", "customers_read"})
+     * @Groups({"invoices_read", "customers_read", "invoices_subresource"})
      */
     private $chrono;
 
     /**
      * Permet de recuperer le user a qui appartient la facture
-     * @Groups({"invoices_read"})
+     * @Groups({"invoices_read", "invoices_subresource"})
      * @return User
      */
     public function getUser() : User {
