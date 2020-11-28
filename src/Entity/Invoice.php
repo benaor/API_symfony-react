@@ -9,6 +9,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
@@ -41,7 +42,7 @@ class Invoice
      * @ORM\Column(type="float")
      * @Groups({"invoices_read", "customers_read", "invoices_subresource"})
      */
-    private $amout;
+    private $amount;
 
     /**
      * @ORM\Column(type="datetime")
@@ -82,14 +83,14 @@ class Invoice
         return $this->id;
     }
 
-    public function getAmout(): ?float
+    public function getAmount(): ?float
     {
-        return $this->amout;
+        return $this->amount;
     }
 
-    public function setAmout(float $amout): self
+    public function setAmount(float $amount): self
     {
-        $this->amout = $amout;
+        $this->amount = $amount;
 
         return $this;
     }
