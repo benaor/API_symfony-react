@@ -2,31 +2,38 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ApiResource
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ApiResource(
+ *  normalizationContext={"groups"={"users_read"}}
+ * )
+ * @UniqueEntity("email", message="Un utilisateur ayant cette adresse email existe déjà")
  */
 class User implements UserInterface
 {
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"customers_read", "invoices_subresource"})
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "users_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"customers_read", "invoices_read", "invoices_subresource"})
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "users_read"})
+     * @Assert\NotBlank(message="L'email doit être renseigné !")
+     * @Assert\Email(message="L'adresse email doit avoir un format valide !")
      */
     private $email;
 
@@ -38,23 +45,28 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="Le mot de passe est obligatoire")
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"customers_read", "invoices_read", "invoices_subresource"})
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "users_read"})
+     * @Assert\NotBlank(message="Le prénom est obligatoire")
+     * @Assert\Length(min=3, minMessage="Le prénom doit faire entre 3 et 255 caractères", max=255, maxMessage="Le prénom doit faire entre 3 et 255 caractères")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"customers_read", "invoices_read", "invoices_subresource"})
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "users_read"})
+     * @Assert\NotBlank(message="Le nom de famille est obligatoire")
+     * @Assert\Length(min=3, minMessage="Le nom de famille doit faire entre 3 et 255 caractères", max=255, maxMessage="Le nom de famille doit faire entre 3 et 255 caractères")
      */
     private $lastName;
 
     /**
-     * @ORM\OneToMany(targetEntity=customer::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Customer", mappedBy="user")
      */
     private $customers;
 
@@ -87,7 +99,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -114,7 +126,7 @@ class User implements UserInterface
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return (string)$this->password;
     }
 
     public function setPassword(string $password): self
@@ -166,14 +178,14 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|customer[]
+     * @return Collection|Customer[]
      */
     public function getCustomers(): Collection
     {
         return $this->customers;
     }
 
-    public function addCustomer(customer $customer): self
+    public function addCustomer(Customer $customer): self
     {
         if (!$this->customers->contains($customer)) {
             $this->customers[] = $customer;
@@ -183,9 +195,10 @@ class User implements UserInterface
         return $this;
     }
 
-    public function removeCustomer(customer $customer): self
+    public function removeCustomer(Customer $customer): self
     {
-        if ($this->customers->removeElement($customer)) {
+        if ($this->customers->contains($customer)) {
+            $this->customers->removeElement($customer);
             // set the owning side to null (unless already changed)
             if ($customer->getUser() === $this) {
                 $customer->setUser(null);

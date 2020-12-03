@@ -24,7 +24,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "pagination_enabled_item_per_page"=20,
  *          "order": {"sentAt":"desc"}
  *      },
- *      normalizationContext={"groups"={"invoices_read"}}
+ *      normalizationContext={"groups"={"invoices_read"}},
+ *      denormalizationContext={"disabled_type_enforcement"=true}
  * )
  * @ApiFilter(OrderFilter::class, properties={"amount","sentAt"})
  */
