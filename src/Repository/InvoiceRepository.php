@@ -27,7 +27,7 @@ class InvoiceRepository extends ServiceEntityRepository
     public function findNextChrono(User $user)
     {
         return $this->createQueryBuilder('i')
-            ->select("chrono")
+            ->select("i.chrono")
             ->join("i.customer", "c")
             ->where("c.user = :user")
             ->setParameter("user", $user)
