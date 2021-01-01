@@ -11,7 +11,7 @@ const Navbar = (props) => {
             <div className="collapse navbar-collapse" id="navbarColor02">
                 <ul className="navbar-nav mr-auto">
                     <li className="nav-item">
-                        <a className="nav-link" href="#">Clients</a>
+                        <a className="nav-link" href="#/customers">Clients</a>
                     </li>
                     <li className="nav-item">
                         <a className="nav-link" href="#">Factures</a>
