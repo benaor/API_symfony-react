@@ -6,6 +6,7 @@ const CustomersPage = (props) => {
 
     const [customers, setCustomers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         axios
@@ -38,11 +39,31 @@ const CustomersPage = (props) => {
         setCurrentPage(page);
     }
 
+    const handleSearch = event => {
+        const value = event.currentTarget.value;
+        setSearch(value);
+        setCurrentPage(1);
+    }
+
     const itemPerPage = 10;
-    const paginatedCustomers = Pagination.getData(customers, currentPage, itemPerPage);
+    const filteredCustomers = customers.filter(
+        c =>
+            c.firstName.toLowerCase().includes(search.toLowerCase()) ||
+            c.lastName.toLowerCase().includes(search.toLowerCase()) ||
+            c.email.toLowerCase().includes(search.toLowerCase()) ||
+            (c.company && c.company.toLowerCase().includes(search.toLowerCase())) 
+    )
+
+    const paginatedCustomers = Pagination.getData(filteredCustomers, currentPage, itemPerPage);
 
     return (
         <>
+            <h1>Liste des clients</h1>
+
+            <div className="form-group">
+                <input type="text" className="form-control" onChange={handleSearch} value={search} placeholder="Rechercher ..." />
+            </div>
+
             <table className="table table-hover">
                 <thead>
                     <tr>
@@ -77,9 +98,9 @@ const CustomersPage = (props) => {
                     )}
                 </tbody>
             </table>
-
-            <Pagination currentPage={currentPage} itemPerPage={itemPerPage} length={customers.length} onPageChanged={handlePageChange} />
-
+            {itemPerPage < filteredCustomers.length &&
+                <Pagination currentPage={currentPage} itemPerPage={itemPerPage} length={filteredCustomers.length} onPageChanged={handlePageChange} />
+            }
         </>
     );
 }
