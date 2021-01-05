@@ -19,7 +19,7 @@ const CustomersPage = (props) => {
     }
 
     // Au chargement du composant, on va chercher les customers
-    useEffect(() => { fetchCustomers() }, [] );
+    useEffect(() => { fetchCustomers() }, []);
 
     const handleDelete = async id => {
 
@@ -43,12 +43,10 @@ const CustomersPage = (props) => {
     }
 
     // Gestion de la recherche
-    const handleSearch = ({currentTarget}) => {
+    const handleSearch = ({ currentTarget }) => {
         setSearch(currentTarget.value);
         setCurrentPage(1);
     }
-
-    const itemPerPage = 10;
 
     // Filtrage des clients en fonction de la recherche
     const filteredCustomers = customers.filter(
@@ -58,6 +56,8 @@ const CustomersPage = (props) => {
             c.email.toLowerCase().includes(search.toLowerCase()) ||
             (c.company && c.company.toLowerCase().includes(search.toLowerCase()))
     )
+
+    const itemPerPage = 10;
 
     // Pagination des données
     const paginatedCustomers = Pagination.getData(filteredCustomers, currentPage, itemPerPage);
