@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import { HashRouter, Switch, Route } from "react-router-dom";
 import CustomersPage from './pages/CustomersPage';
 import InvoicesPage from './pages/InvoicesPage';
+import LoginPage from './pages/LoginPage';
 
 // start the Stimulus application
 // import './bootstrap';
@@ -19,6 +20,7 @@ const App = () => {
 
             <main className="container pt-5">
                 <Switch>
+                    <Route path="/login" component={LoginPage} />
                     <Route path="/customers" component={CustomersPage} />
                     <Route path="/invoices" component={InvoicesPage} />
                     <Route path="/" component={HomePage} />

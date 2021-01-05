@@ -24,7 +24,7 @@ const Navbar = (props) => {
                         </a>
                     </li>
                     <li className="nav-item">
-                        <a href="#" className="btn btn-light text-success">
+                        <a href="#/login" className="btn btn-light text-success">
                             Connexion !
                         </a>
                     </li>
