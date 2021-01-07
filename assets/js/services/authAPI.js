@@ -15,6 +15,12 @@ async function authenticate(credentials) {
     })
 }
 
+function logout() {
+    window.localStorage.removeItem("authToken");
+    delete Axios.defaults.headers["authorization"];
+}
+
 export default {
-    authenticate: authenticate
+    authenticate: authenticate,
+    logout : logout
 }

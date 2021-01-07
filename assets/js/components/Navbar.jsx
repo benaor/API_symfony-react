@@ -1,6 +1,12 @@
 import React from 'react';
+import authAPI from '../services/authAPI';
 
 const Navbar = (props) => {
+
+    const handleLogout = () => {
+        authAPI.logout();
+    };
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <a className="navbar-brand" href="#">SymReact</a>
@@ -29,9 +35,9 @@ const Navbar = (props) => {
                         </a>
                     </li>
                     <li className="nav-item">
-                        <a href="#" className="btn btn-danger">
+                        <button onClick={handleLogout} className="btn btn-danger">
                             Deconnexion !
-                        </a>
+                        </button>
                     </li>
                 </ul>
             </div>
