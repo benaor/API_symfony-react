@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AuthAPI from '../services/authAPI';
 
-const LoginPage = props => {
+const LoginPage = ({onLogin}) => {
 
     const [credentials, setCredentials] = useState({
         username: "",
@@ -20,7 +20,7 @@ const LoginPage = props => {
         try {
             await AuthAPI.authenticate(credentials);
             setError("");
-            console.log("connexion reussi");
+            onLogin(true)
         } catch (error) {
             setError("Aucun compte n'est relié a cet email, ou le mot de passe ne correspond pas");
         }
