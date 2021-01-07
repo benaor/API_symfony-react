@@ -1,7 +1,7 @@
-import Axios from 'axios';
 import React, { useState } from 'react';
+import AuthAPI from '../services/authAPI';
 
-const LoginPage = (props) => {
+const LoginPage = props => {
 
     const [credentials, setCredentials] = useState({
         username: "",
@@ -9,10 +9,8 @@ const LoginPage = (props) => {
     })
     const [error, setError] = useState("");
 
-    const handleCredentialsChange = event => {
-        const value = event.currentTarget.value;
-        const name = event.currentTarget.name;
-
+    const handleCredentialsChange = ({currentTarget}) => {
+        const {value, name} = currentTarget;
         setCredentials({ ...credentials, [name]: value });
     }
 
@@ -20,21 +18,11 @@ const LoginPage = (props) => {
         event.preventDefault();
 
         try {
-            const token = await Axios
-            .post("https://localhost:8000/api/login_check", credentials)
-            .then(response => response.data.token);
-
-        setError("");
-
-        // On stock le token dans le localstorage
-        window.localStorage.setItem("authToken", token);
-
-        // On previent Axios qu'on a maitenant un header avec un Token d'authentification sur toutes nos futurs requetes HTTP
-        Axios.defaults.headers["Authorization"] = "Bearer " + token;
-
+            await AuthAPI.authenticate(credentials);
+            setError("");
+            console.log("connexion reussi");
         } catch (error) {
-            console.log(error.response)
-            setError("Aucun compte n'est relié a cet email, ou le mot de passe ne correspond pas")
+            setError("Aucun compte n'est relié a cet email, ou le mot de passe ne correspond pas");
         }
     }
 
