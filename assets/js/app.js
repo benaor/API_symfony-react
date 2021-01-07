@@ -7,11 +7,12 @@ import { HashRouter, Switch, Route } from "react-router-dom";
 import CustomersPage from './pages/CustomersPage';
 import InvoicesPage from './pages/InvoicesPage';
 import LoginPage from './pages/LoginPage';
+import authAPI from './services/authAPI';
 
 // start the Stimulus application
 // import './bootstrap';
 
-console.log("Bonjour Benjamin");
+authAPI.setup();
 
 const App = () => {
     return (
