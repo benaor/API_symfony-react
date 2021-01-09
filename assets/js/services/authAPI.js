@@ -1,6 +1,32 @@
 import Axios from "axios";
 import jwtDecode from "jwt-decode";
 
+//Permet d'indiquer si on est connecté ou non ? 
+function isAuthenticated() {
+
+    // Est ce que le token existe ? 
+    const token = window.localStorage.getItem("authToken");
+
+    // Si il existe
+    if (token) {
+
+        // Est ce que le token est encore valide ? 
+        const jwtData = jwtDecode(token);
+        if (jwtData.exp * 1000 > new Date().getTime()) {
+
+            return true;
+
+        } else {
+
+            return false;
+        }
+
+    } else {
+
+        return false;
+
+    }
+}
 
 // Permet de se connecter 
 async function authenticate(credentials) {
@@ -50,5 +76,6 @@ function logout() {
 export default {
     authenticate: authenticate,
     logout: logout,
-    setup: setup
+    setup: setup,
+    isAuthenticated: isAuthenticated
 }
