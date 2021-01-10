@@ -14,6 +14,14 @@ import authAPI from './services/authAPI';
 
 authAPI.setup();
 
+const PrivateRoute = ({ path, isAuthenticated, component }) =>
+    isAuthenticated ? (
+        <Route path={path} component={component} />
+    ) : (
+        <Redirect to="/login" />
+        );
+
+
 const App = () => {
 
     const [isAuthenticated, setIsAuthenticated] = useState(authAPI.isAuthenticated());
@@ -28,10 +36,8 @@ const App = () => {
                 <Switch>
                     <Route path="/login" render={(props) =>
                         <LoginPage onLogin={setIsAuthenticated} {...props} />} />
-                    <Route path="/invoices" component={InvoicesPage} />
-                    <Route path="/customers" render={(props) => {
-                        return isAuthenticated ? (<CustomersPage {...props} />) : (<Redirect to="/login" />);
-                    }} />
+                    <PrivateRoute path="/invoices" isAuthenticated={isAuthenticated} component={InvoicesPage} />
+                    <PrivateRoute path="/customers" isAuthenticated={isAuthenticated} component={CustomersPage} />
                     <Route path="/" component={HomePage} />
                 </Switch>
             </main>
