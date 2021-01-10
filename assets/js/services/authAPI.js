@@ -1,7 +1,10 @@
 import Axios from "axios";
 import jwtDecode from "jwt-decode";
 
-//Permet d'indiquer si on est connecté ou non ? 
+/**
+ * Permet d'indiquer si on est connecté ou non ? 
+ * @returns boolean
+ */
 function isAuthenticated() {
 
     // Est ce que le token existe ? 
@@ -28,7 +31,10 @@ function isAuthenticated() {
     }
 }
 
-// Permet de se connecter 
+/**
+ * Requete HTTP d'authentification et stockage du token dans le localstorage et sur axios
+ * @param {object} credentials 
+ */
 async function authenticate(credentials) {
 
     // On envoi une requete a axios pour obtenir un token
@@ -44,7 +50,10 @@ async function authenticate(credentials) {
         })
 }
 
-// Permet de definir un token
+/**
+ * positionnne le token JWT sur axios
+ * @param {String} token Le token JWT 
+ */
 function setAxiosToken(token) {
     Axios.defaults.headers["authorization"] = "Bearer " + token;
 }
@@ -67,7 +76,9 @@ function setup() {
     }
 }
 
-// Permet de se deconnecter
+/**
+ * Permet de se deconnecter
+ */
 function logout() {
     window.localStorage.removeItem("authToken");
     delete Axios.defaults.headers["authorization"];
