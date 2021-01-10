@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import AuthContext from '../contexts/AuthContext';
 import AuthAPI from '../services/authAPI';
 
 const LoginPage = ({onLogin, history}) => {
 
+    const { setIsAuthenticated } = useContext(AuthContext);
     const [credentials, setCredentials] = useState({
         username: "",
         password: ""
@@ -20,7 +22,7 @@ const LoginPage = ({onLogin, history}) => {
         try {
             await AuthAPI.authenticate(credentials);
             setError("");
-            onLogin(true)
+            setIsAuthenticated(true)
             history.replace('/')
         } catch (error) {
             setError("Aucun compte n'est relié a cet email, ou le mot de passe ne correspond pas");

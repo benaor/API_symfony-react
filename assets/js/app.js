@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import ReactDOM from 'react-dom';
 import '../css/app.css';
 import Navbar from './components/Navbar';
@@ -8,19 +8,25 @@ import CustomersPage from './pages/CustomersPage';
 import InvoicesPage from './pages/InvoicesPage';
 import LoginPage from './pages/LoginPage';
 import authAPI from './services/authAPI';
+import AuthContext from "./contexts/AuthContext";
+
 
 // start the Stimulus application
 // import './bootstrap';
 
 authAPI.setup();
 
-const PrivateRoute = ({ path, isAuthenticated, component }) =>
-    isAuthenticated ? (
+const PrivateRoute = ({ path, component }) => {
+
+    const {isAuthenticated} = useContext(AuthContext);
+
+    return isAuthenticated ? (
         <Route path={path} component={component} />
     ) : (
-        <Redirect to="/login" />
+            <Redirect to="/login" />
         );
 
+}
 
 const App = () => {
 
@@ -28,21 +34,27 @@ const App = () => {
 
     const NavbarWithRouter = withRouter(Navbar);
 
-    return (
-        <HashRouter>
-            <NavbarWithRouter isAuthenticated={isAuthenticated} onLogout={setIsAuthenticated} />
+    const contextValue = {
+        isAuthenticated: isAuthenticated,
+        setIsAuthenticated: setIsAuthenticated
+    }
 
-            <main className="container pt-5">
-                <Switch>
-                    <Route path="/login" render={(props) =>
-                        <LoginPage onLogin={setIsAuthenticated} {...props} />} />
-                    <PrivateRoute path="/invoices" isAuthenticated={isAuthenticated} component={InvoicesPage} />
-                    <PrivateRoute path="/customers" isAuthenticated={isAuthenticated} component={CustomersPage} />
-                    <Route path="/" component={HomePage} />
-                </Switch>
-            </main>
-        </HashRouter>
-    )
+    return (
+        <AuthContext.Provider value={contextValue} >
+            <HashRouter>
+                <NavbarWithRouter />
+
+                <main className="container pt-5">
+                    <Switch>
+                        <Route path="/login" component={LoginPage} />
+                        <PrivateRoute path="/invoices" component={InvoicesPage} />
+                        <PrivateRoute path="/customers" component={CustomersPage} />
+                        <Route path="/" component={HomePage} />
+                    </Switch>
+                </main>
+            </HashRouter>
+        </AuthContext.Provider>
+    );
 }
 
 const rootElement = document.querySelector('#app');
