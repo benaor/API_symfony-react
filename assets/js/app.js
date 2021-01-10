@@ -1,32 +1,20 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import { HashRouter, Route, Switch, withRouter } from "react-router-dom";
 import '../css/app.css';
 import Navbar from './components/Navbar';
-import HomePage from './pages/HomePage';
-import { HashRouter, Switch, Route, withRouter, Redirect } from "react-router-dom";
+import PrivateRoute from './components/PrivateRoute';
+import AuthContext from "./contexts/AuthContext";
 import CustomersPage from './pages/CustomersPage';
+import HomePage from './pages/HomePage';
 import InvoicesPage from './pages/InvoicesPage';
 import LoginPage from './pages/LoginPage';
 import authAPI from './services/authAPI';
-import AuthContext from "./contexts/AuthContext";
-
 
 // start the Stimulus application
 // import './bootstrap';
 
 authAPI.setup();
-
-const PrivateRoute = ({ path, component }) => {
-
-    const {isAuthenticated} = useContext(AuthContext);
-
-    return isAuthenticated ? (
-        <Route path={path} component={component} />
-    ) : (
-            <Redirect to="/login" />
-        );
-
-}
 
 const App = () => {
 
@@ -34,13 +22,11 @@ const App = () => {
 
     const NavbarWithRouter = withRouter(Navbar);
 
-    const contextValue = {
-        isAuthenticated: isAuthenticated,
-        setIsAuthenticated: setIsAuthenticated
-    }
-
     return (
-        <AuthContext.Provider value={contextValue} >
+        <AuthContext.Provider value={{
+            isAuthenticated: isAuthenticated,
+            setIsAuthenticated: setIsAuthenticated
+        }} >
             <HashRouter>
                 <NavbarWithRouter />
 
