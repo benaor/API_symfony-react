@@ -5,6 +5,7 @@ import '../css/app.css';
 import Navbar from './components/Navbar';
 import PrivateRoute from './components/PrivateRoute';
 import AuthContext from "./contexts/AuthContext";
+import CustomerPage from './pages/CustomerPage';
 import CustomersPage from './pages/CustomersPage';
 import HomePage from './pages/HomePage';
 import InvoicesPage from './pages/InvoicesPage';
@@ -34,6 +35,7 @@ const App = () => {
                     <Switch>
                         <Route path="/login" component={LoginPage} />
                         <PrivateRoute path="/invoices" component={InvoicesPage} />
+                        <PrivateRoute path="/customers/:id" component={CustomerPage} />
                         <PrivateRoute path="/customers" component={CustomersPage} />
                         <Route path="/" component={HomePage} />
                     </Switch>
