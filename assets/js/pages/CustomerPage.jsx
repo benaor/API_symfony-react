@@ -29,10 +29,17 @@ const CustomerPage = (props) => {
 
         try {
             const response = await Axios.post("https://localhost:8000/api/customers", customer);
+            setErrors({});
             console.log(response.data);
 
         } catch (error) {
-            console.log(response.error);
+            if (error.response.data.violations) {
+                const apiErrors = {}; 
+                error.response.data.violations.forEach(violation => {
+                    apiErrors[violation.propertyPath] = violation.message;
+                });
+                setErrors(apiErrors);
+            }
         }
     }
 
