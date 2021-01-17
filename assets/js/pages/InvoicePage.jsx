@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Field from '../components/forms/Field';
 import Select from '../components/forms/Select';
 import customersAPI from '../services/customersAPI';
+import invoicesAPI from '../services/invoicesAPI';
 
 const InvoicePage = ({ history, match }) => {
 
@@ -24,7 +25,7 @@ const InvoicePage = ({ history, match }) => {
         status: ""
     })
 
-
+    //recuperation des clients 
     const fetchCustomers = async () => {
         try {
             const data = await customersAPI.findAll();
@@ -45,23 +46,25 @@ const InvoicePage = ({ history, match }) => {
         }
     }
 
+    // Recuperation d'une facture 
     const fectchInvoice = async id => {
         try {
-            const data = await Axios.get("https://localhost:8000/api/invoices/" + id)
-                .then(response => response.data);
-
-                const { amount, status, customer } = data;
-                setInvoice({ amount, status, customer: customer.id });
+            const { amount, status, customer } = await invoicesAPI.find(id);
+            setInvoice({ amount, status, customer: customer.id });
 
         } catch (error) {
             console.log(error.response);
+            //TODO : flash noification erreur
+            history.replace("/invoices")
         }
     }
 
+    //recuperation de la liste des clients a chaque chargement du composant
     useEffect(() => {
         fetchCustomers();
     }, []);
 
+    //Recuperation de la bonne facture quand l'URL change 
     useEffect(() => {
         if (id !== "new") {
             setEditing(true);
@@ -69,7 +72,7 @@ const InvoicePage = ({ history, match }) => {
         }
     }, [id])
 
-    //Gestion des changements des inouts dans les formaulaires.
+    //Gestion des changements des inputs dans les formulaires.
     const handleChange = ({ currentTarget }) => {
         const { name, value } = currentTarget;
         setInvoice({ ...invoice, [name]: value })
@@ -80,10 +83,10 @@ const InvoicePage = ({ history, match }) => {
 
         try {
             if(editing) {
-                const response = await Axios.put("https://localhost:8000/api/invoices/" + id, { ...invoice, customer: `/api/customers/${invoice.customer}` });
+                await invoicesAPI.update(id, invoice);
+                //TODO FLASH
             } else { 
-                const response = await Axios.post("https://localhost:8000/api/invoices", { ...invoice, customer: `/api/customers/${invoice.customer}` });
-                console.log(response);
+                await invoicesAPI.create(invoice);
             }
         } catch (error) {
             console.log(error.response);
