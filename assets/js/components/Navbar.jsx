@@ -54,13 +54,13 @@ const Navbar = ({ history }) => {
                             <li className="nav-item">
                                 <NavLink to="/register" className="nav-link">
                                     Inscription
-                        </NavLink>
+                                </NavLink>
                             </li>
 
                             <li className="nav-item">
                                 <NavLink to="/login" className="btn btn-light text-success">
                                     Connexion !
-                        </NavLink>
+                                </NavLink>
                             </li>
                         </>
                     )) || (

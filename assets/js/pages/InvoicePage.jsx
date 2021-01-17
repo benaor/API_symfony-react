@@ -1,4 +1,3 @@
-import Axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Field from '../components/forms/Field';
@@ -54,8 +53,8 @@ const InvoicePage = ({ history, match }) => {
 
         } catch (error) {
             console.log(error.response);
-            //TODO : flash noification erreur
             history.replace("/invoices")
+            //TODO : flash noification erreur
         }
     }
 
