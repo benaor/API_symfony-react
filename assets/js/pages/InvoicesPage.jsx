@@ -115,7 +115,7 @@ const InvoicesPage = (props) => {
                         {paginatedInvoices.map(invoice => <tr key={invoice.id} >
                             <td>{invoice.chrono}</td>
                             <td>
-                                <a href="#">{invoice.customer.firstName} {invoice.customer.lastName}</a>
+                                <Link to={"/customers/" + invoice.customer.id}>{invoice.customer.firstName} {invoice.customer.lastName}</Link>
                             </td>
                             <td>{formatDate(invoice.sentAt)}</td>
                             <td className="text-center">
@@ -131,7 +131,7 @@ const InvoicesPage = (props) => {
                 )}
             </table>
             {loading && (
-            <TableLoader />
+                <TableLoader />
             )}
 
             <Pagination currentPage={currentPage} itemPerPage={itemPerPage} onPageChanged={handlePageChange} length={filteredInvoices.length}></Pagination>
