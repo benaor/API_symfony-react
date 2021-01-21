@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Field from '../components/forms/Field';
 import Select from '../components/forms/Select';
 import customersAPI from '../services/customersAPI';
@@ -40,7 +41,7 @@ const InvoicePage = ({ history, match }) => {
                     apiErrors[propertyPath] = message;
                 });
                 setErrors(apiErrors);
-                //TODO : flash notifications d'une erreur
+                toast.error("impossible de charger les clients")
             }
         }
     }
@@ -54,7 +55,7 @@ const InvoicePage = ({ history, match }) => {
         } catch (error) {
             console.log(error.response);
             history.replace("/invoices")
-            //TODO : flash noification erreur
+            toast.error("impossible de charger la facture demandé")
         }
     }
 
@@ -83,14 +84,20 @@ const InvoicePage = ({ history, match }) => {
         try {
             if(editing) {
                 await invoicesAPI.update(id, invoice);
-                //TODO FLASH
+                toast.success("la facture a bien été modifié")
             } else { 
                 await invoicesAPI.create(invoice);
+                toast.success("la facture a bien été crée")
             }
-        } catch (error) {
-            console.log(error.response);
+        } catch ({ response }) {
+            const { violations } = response.data;
+            violations.forEach(({ propertyPath, message }) => {
+                apiErrors[propertyPath] = message;
+            });
+
+            setErrors(apiErrorrs);
+            toast("Il y a des erreurs dans votre formulaire")
         }
-        console.log(invoice);
     }
 
     return (

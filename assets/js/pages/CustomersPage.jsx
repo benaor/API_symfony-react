@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Pagination from '../components/Pagination';
 import CustomersAPI from "../services/customersAPI";
 
@@ -15,7 +16,7 @@ const CustomersPage = (props) => {
             const data = await CustomersAPI.findAll()
             setCustomers(data)
         } catch (error) {
-            console.log(error.response)
+            toast.error("impossible de charger la liste des clients");
         }
     }
 
@@ -32,11 +33,12 @@ const CustomersPage = (props) => {
 
         //Send HTTP Request to API
         try {
-            await CustomersAPI.delete(id)
+            await CustomersAPI.delete(id);
+            toast.success("Le client a bien été supprimé");
         } catch (error) {
             setCustomers(originalCustomers);
+            toast.error("Le client n'a pas pu être supprimé");
         }
-
     };
 
     const handlePageChange = (page) => {
@@ -65,10 +67,10 @@ const CustomersPage = (props) => {
 
     return (
         <>
-        <div className="d-flex justify-content-between align-items-center mb-3">
-            <h1>Liste des clients</h1>
-        <Link to="/customers/new" className="btn btn-primary">Créer un client</Link>
-        </div>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                <h1>Liste des clients</h1>
+                <Link to="/customers/new" className="btn btn-primary">Créer un client</Link>
+            </div>
 
             <div className="form-group">
                 <input type="text" className="form-control" onChange={handleSearch} value={search} placeholder="Rechercher ..." />
